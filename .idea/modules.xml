@@ -18,7 +18,7 @@
       <module fileurl="file://$PROJECT_DIR$/backend/client-microservice/src/test/test4.iml" filepath="$PROJECT_DIR$/backend/client-microservice/src/test/test4.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/gateway/src/test/test5.iml" filepath="$PROJECT_DIR$/backend/gateway/src/test/test5.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/eureka/src/test/test6.iml" filepath="$PROJECT_DIR$/backend/eureka/src/test/test6.iml" />
-      <module fileurl="file://$PROJECT_DIR$/backend/ingress-microservice/src/test/test7.iml" filepath="$PROJECT_DIR$/backend/ingress-microservice/src/test/test7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/ingress-ms/src/test/test7.iml" filepath="$PROJECT_DIR$/backend/ingress-ms/src/test/test7.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/report-microservice/src/test/test8.iml" filepath="$PROJECT_DIR$/backend/report-microservice/src/test/test8.iml" />
     </modules>
   </component>

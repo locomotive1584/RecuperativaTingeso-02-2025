@@ -7,10 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ingress-microservice" />
         <module name="config-service" />
-        <module name="egress-microservice" />
+        <module name="ingress-ms" />
         <module name="report-microservice" />
+        <module name="egress-ms" />
         <module name="config" />
         <module name="tool-microservice" />
         <module name="gateway" />
@@ -30,10 +30,10 @@
       <module name="client-microservice" options="-parameters" />
       <module name="config" options="-parameters" />
       <module name="config-service" options="-parameters" />
-      <module name="egress-microservice" options="-parameters" />
+      <module name="egress-ms" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="gateway" options="-parameters" />
-      <module name="ingress-microservice" options="-parameters" />
+      <module name="ingress-ms" options="-parameters" />
       <module name="kardex-microservice" options="-parameters" />
       <module name="loan-microservice" options="-parameters" />
       <module name="report-microservice" options="-parameters" />
