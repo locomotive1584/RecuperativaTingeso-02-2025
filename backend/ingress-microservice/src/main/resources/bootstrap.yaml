@@ -1,6 +1,6 @@
 spring:
   application:
-    name: bill-ms
+    name: ingress-ms
   cloud:
     config:
       uri: http://localhost:8888

@@ -17,3 +17,8 @@ spring:
           predicates:
             - Path=/egress/**
 
+        - id: ingress-ms
+          uri: http://localhost:8002
+          predicates:
+            - Path=/ingress/**
+
