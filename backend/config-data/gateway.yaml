@@ -13,7 +13,7 @@ spring:
           enabled: true
       routes:
         - id: egress-ms
-          uri: localhost:8001
+          uri: http://localhost:8001
           predicates:
-            - Path=/bills/**
+            - Path=/egress/**
 
