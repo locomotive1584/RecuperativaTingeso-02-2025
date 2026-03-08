@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/backend/client-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/config/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/egress-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/eureka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/ingress-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/kardex-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/loan-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/report-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/tool-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/user-microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../user-microservice/src/main/java" charset="UTF-8" />
+  </component>
+</project>

@@ -1,0 +1,14 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          default-label: main
+          uri: https://github.com/locomotive1584/RecuperativaTingeso-02-2025.git
+          search-paths: "backend/config-data"
+          username: ${GITHUB_USERNAME:locomotive1584}
+          password: ${GITHUB_TOKEN}

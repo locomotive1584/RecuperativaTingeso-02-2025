@@ -1,0 +1,19 @@
+server:
+  port: 8081
+
+eureka:
+  client:
+    enabled: false
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: egress-ms
+          uri: localhost:8001
+          predicates:
+            - Path=/bills/**
+

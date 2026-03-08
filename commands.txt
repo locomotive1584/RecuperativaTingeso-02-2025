@@ -1,0 +1,139 @@
+###################
+##### Backend #####
+###################
+
+
+cd backend
+
+cd config
+docker build -t locomotive1584/config .
+docker push locomotive1584/config
+cd ..
+
+cd eureka
+docker build -t locomotive1584/eureka .
+docker push locomotive1584/eureka
+cd ..
+
+cd gateway
+docker build -t locomotive1584/gateway .
+docker push locomotive1584/gateway:latest
+cd ..
+
+cd bill-microservice
+docker build -t locomotive1584/bill-microservice:latest .
+docker push locomotive1584/bill-microservice:latest
+cd ..
+
+cd client-microservice
+docker build -t locomotive1584/client-microservice:latest .
+docker push locomotive1584/client-microservice:latest
+cd ..
+
+cd kardex-microservice
+docker build -t locomotive1584/kardex-microservice:latest .
+docker push locomotive1584/kardex-microservice:latest
+cd ..
+
+cd loan-microservice
+docker build -t locomotive1584/loan-microservice:latest .
+docker push locomotive1584/loan-microservice:latest
+cd ..
+
+cd report-microservice
+docker build -t locomotive1584/report-microservice:latest .
+docker push locomotive1584/report-microservice:latest
+cd ..
+
+cd tool-microservice
+docker build -t locomotive1584/tool-microservice:latest .
+docker push locomotive1584/tool-microservice:latest
+cd ..
+cd ..
+
+####################
+##### Frontend #####
+####################
+
+cd frontend
+docker build -t locomotive1584/frontend:latest .
+docker push locomotive1584/frontend:latest
+cd ..
+
+##################
+### Kubernetes ###
+##################
+
+cd deployment
+
+minikube stop
+
+minikube delete
+
+minikube start --driver=docker
+
+#################
+### DB delete ###
+#################
+
+kubectl delete -f postgres-config-map.yaml
+kubectl delete -f postgres-secrets.yaml 
+kubectl delete -f postgres-dp-sv-pvc.yaml
+
+<!-- Deployment delete -->
+kubectl delete -f config-deployment.yaml
+kubectl delete -f eureka-deployment.yaml
+kubectl delete -f gateway-deployment.yaml
+kubectl delete -f ms-report-deploy.yaml
+kubectl delete -f ms-client-deploy.yaml
+kubectl delete -f ms-loan-deploy.yaml
+kubectl delete -f ms-tool-deploy.yaml
+kubectl delete -f ms-kardex-deploy.yaml
+kubectl delete -f frontend-deployment.yaml
+
+<!-- Deployment -->
+<!-- DB init-->
+kubectl apply -f postgres-config-map.yaml
+kubectl apply -f postgres-secrets.yaml
+kubectl apply -f postgres-dp-sv-pvc.yaml
+
+<!-- Crear las bases de datos en el pod -->
+kubectl get pods
+kubectl exec -it postgres-[ALGO AQUI] -- psql -U postgres
+
+<!-- Crear las bases de datos -->
+CREATE DATABASE "bill-db";
+CREATE DATABASE "client-db";
+CREATE DATABASE "report-db";
+CREATE DATABASE "loan-db";
+CREATE DATABASE "report-db";
+CREATE DATABASE "tool-db";
+
+<!-- Listar las bases de datos -->
+\l
+
+<!-- Deploy microservices -->
+kubectl apply -f config-deployment.yaml
+kubectl get pods
+
+kubectl apply -f eureka-deployment.yaml
+kubectl get pods
+
+kubectl apply -f gateway-deployment.yaml
+kubectl get pods
+
+kubectl apply -f ms-user-deploy.yaml
+kubectl apply -f ms-report-deploy.yaml
+kubectl apply -f ms-client-deploy.yaml
+kubectl apply -f ms-loan-deploy.yaml
+kubectl apply -f ms-tool-deploy.yaml
+kubectl apply -f ms-kardex-deploy.yaml
+kubectl apply -f frontend-deployment.yaml
+
+###############################
+### Ultimas configuraciones ###
+###############################
+
+kubectl get pods
+
+minikube service frontend --url
