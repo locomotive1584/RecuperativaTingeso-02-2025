@@ -1,6 +1,8 @@
 package com.project.report_ms.services;
 
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.project.report_ms.models.*;
@@ -27,8 +29,6 @@ public class ReportService {
 
         transaction.setEgress(true);
 
-        transaction.setId(egress.getId());
-
         transaction.setDate(egress.getDate());
 
         transaction.setDocType(egress.getDocType());
@@ -54,8 +54,6 @@ public class ReportService {
         TransactionDTO transaction = new TransactionDTO();
 
         transaction.setEgress(false);
-
-        transaction.setId(ingress.getId());
 
         transaction.setDate(ingress.getDate());
 
@@ -106,8 +104,9 @@ public class ReportService {
 
         int cuttingTo = -1;
         for (int i = 1; i < inputList.size() + 1; i++) {
-            if (inputList.get(inputList.size()-i).getDate().isEqual(to) || inputList.get(inputList.size()-i).getDate().isBefore(to)) {
-                cuttingTo = inputList.size()-i;
+            
+            if ((inputList.get(inputList.size()-i).getDate().isBefore(to)) || (inputList.get(inputList.size()-i).getDate().equals(to))) {
+                cuttingTo = inputList.size()-i+1;
                 break;
             }
         }
@@ -138,8 +137,23 @@ public class ReportService {
     }
 
     public List<TransactionDTO> getSortedList(){
-        List<Ingress> ingresses = restTemplate.getForObject(ingressUrl + "all/sorted", List.class);
-        List<Egress> egresses = restTemplate.getForObject(egressUrl + "all/sorted", List.class);
+        ResponseEntity<List<Ingress>> ingressResponse = restTemplate.exchange(
+                "http://localhost:8081/ingress/all/sorted",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Ingress>>() {}
+        );
+        List<Ingress> ingresses = ingressResponse.getBody();
+
+
+
+        ResponseEntity<List<Egress>> egressResponse = restTemplate.exchange(
+                "http://localhost:8081/egress/all/sorted",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Egress>>() {}
+        );
+        List<Egress> egresses = egressResponse.getBody();
 
         List<TransactionDTO> sortedList = new ArrayList<>();
 
@@ -183,11 +197,11 @@ public class ReportService {
             }
         }
 
-        if(ingressesToTransaction != null){
+        if(ingressesToTransaction != null && egressesToTransaction == null){
             sortedList = ingressesToTransaction;
         }
 
-        if(egressesToTransaction != null){
+        if(egressesToTransaction != null && ingressesToTransaction == null){
             sortedList = egressesToTransaction;
         }
 

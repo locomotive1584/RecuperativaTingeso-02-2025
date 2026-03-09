@@ -25,12 +25,17 @@ public class ReportController {
         return ResponseEntity.ok(reportService.sortBetweenDates(null, null));
     }
 
-    @GetMapping("/After/{from}/Before//")
+    @GetMapping("/After/Before/")
+    public ResponseEntity<List<TransactionDTO>> getSortedListWithoutSlashes() {
+        return ResponseEntity.ok(reportService.sortBetweenDates(null, null));
+    }
+
+    @GetMapping("/After/{from}/Before/")
     public ResponseEntity<List<TransactionDTO>> getSortedListAfter(@PathVariable LocalDate from) {
         return ResponseEntity.ok(reportService.sortBetweenDates(from, null));
     }
 
-    @GetMapping("/After//Before/{to}/")
+    @GetMapping("/After/Before/{to}/")
     public ResponseEntity<List<TransactionDTO>> getSortedListBefore(@PathVariable LocalDate to) {
         return ResponseEntity.ok(reportService.sortBetweenDates(null, to));
     }

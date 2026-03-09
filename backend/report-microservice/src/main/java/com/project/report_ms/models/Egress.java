@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Egress {
 
-    private Long id;
-
     private LocalDate date;
 
     private String docType;
@@ -34,10 +32,6 @@ public class Egress {
 
     public String getDocType() {
         return docType;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getNumDoc() {

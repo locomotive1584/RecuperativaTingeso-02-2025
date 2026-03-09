@@ -11,8 +11,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Ingress {
 
-    private Long id;
-
     private LocalDate date;
 
     private String numDoc;
@@ -25,10 +23,6 @@ public class Ingress {
 
     public LocalDate getDate() {
         return date;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getNumDoc() {
