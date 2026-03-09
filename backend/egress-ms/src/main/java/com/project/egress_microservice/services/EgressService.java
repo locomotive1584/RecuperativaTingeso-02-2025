@@ -17,7 +17,7 @@ public class EgressService {
         return true;
     }
 
-    public EgressEntity saveIngress(EgressEntity egressEntity) throws Exception{
+    public EgressEntity saveEgress(EgressEntity egressEntity) throws Exception{
         try {
             return egressRepository.save(egressEntity);
         } catch (Exception e) {
@@ -25,8 +25,12 @@ public class EgressService {
         }
     }
 
-    public List<EgressEntity> getAllIngress(){
+    public List<EgressEntity> getAllEgress(){
         return egressRepository.findAll();
     }
-    
+
+    public List<EgressEntity> getAllEgressOrderByDate(){
+        return egressRepository.findAllOrderByDateAsc();
+    }
+
 }

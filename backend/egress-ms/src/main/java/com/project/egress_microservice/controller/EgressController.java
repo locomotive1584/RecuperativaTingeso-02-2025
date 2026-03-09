@@ -20,13 +20,19 @@ public class EgressController {
         return ResponseEntity.ok(egressService.ping());
     }
 
+
     @GetMapping("all")
     public ResponseEntity<List<EgressEntity>> getAll(){
-        return ResponseEntity.ok(egressService.getAllIngress());
+        return ResponseEntity.ok(egressService.getAllEgress());
+    }
+
+    @GetMapping("all/sorted")
+    public ResponseEntity<List<EgressEntity>> getAllOrderByDate(){
+        return ResponseEntity.ok(egressService.getAllEgressOrderByDate());
     }
 
     @PostMapping("")
     public ResponseEntity<EgressEntity> addEgress(@RequestBody EgressEntity egress) throws Exception{
-        return ResponseEntity.ok(egressService.saveIngress(egress));
+        return ResponseEntity.ok(egressService.saveEgress(egress));
     }
 }

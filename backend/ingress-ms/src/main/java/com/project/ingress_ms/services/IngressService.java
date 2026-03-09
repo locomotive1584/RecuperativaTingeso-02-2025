@@ -28,4 +28,8 @@ public class IngressService {
     public List<IngressEntity> getAllIngress(){
         return ingressRepository.findAll();
     }
+
+    public List<IngressEntity> getAllIngressOrderByDate(){
+        return ingressRepository.findAllOrderByDateAsc();
+    }
 }

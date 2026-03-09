@@ -17,6 +17,8 @@
         <option value="$PROJECT_DIR$/backend/user-microservice/pom.xml" />
         <option value="$PROJECT_DIR$/backend/ingress-microservice/pom.xml" />
         <option value="$PROJECT_DIR$/backend/egress-microservice/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/ingress-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/egress-ms/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

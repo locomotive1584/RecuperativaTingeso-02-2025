@@ -24,6 +24,11 @@ public class IngressController {
         return ResponseEntity.ok(ingressService.getAllIngress());
     }
 
+    @GetMapping("all/sorted")
+    public ResponseEntity<List<IngressEntity>> getAllOrderByDate(){
+        return ResponseEntity.ok(ingressService.getAllIngressOrderByDate());
+    }
+
     @PostMapping("")
     public ResponseEntity<IngressEntity> addIngress(@RequestBody IngressEntity ingress) throws Exception{
         return ResponseEntity.ok(ingressService.saveIngress(ingress));

@@ -1,380 +1,206 @@
 package com.project.report_ms.services;
 
 
-import com.project.report_ms.entities.*;
-import com.project.report_ms.models.Client;
-import com.project.report_ms.models.Devolution;
-import com.project.report_ms.models.Loan;
-import com.project.report_ms.models.Tool;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.project.report_ms.models.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
 
 @Service
 public class ReportService {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    String toolUrl = "http://TOOL-MS/tools";
-    String clientUrl = "http://CLIENT-MS/clients";
-    String loanUrl = "http://LOAN-MS/loans";
-    String devolutionUrl = "http://LOAN-MS/devolutions";
+    String ingressUrl = "http://localhost:8081/ingress/";
+    String egressUrl = "http://localhost:8081/egress/";
 
-
-    public List<ValidityDto> getValidityOfLoans() {
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/", List.class);
-        List<Devolution> devolutions = restTemplate.getForObject(devolutionUrl + "/", List.class);
-
-        List<Loan> unpaidLoans = new ArrayList<>();
-
-        assert loans != null;
-        for (Loan loan : loans) {
-
-            boolean isReturned = false;
-
-            for (Devolution devolution : devolutions) {
-                if (loan.getId() == devolution.getLoanId()){
-                    isReturned = true;
-                    break;
-                }
-            }
-
-            if (!isReturned){
-                unpaidLoans.add(loan);
-            }
-        }
-
-        List<ValidityDto> validities = new ArrayList<>();
-
-        for (Loan loan : unpaidLoans) {
-            ValidityDto validityDto = new ValidityDto();
-            validityDto.setLoan(loan);
-            if (loan.getAgreedDate().isBefore(LocalDate.now())){
-                validityDto.setState("atrasado");
-            }
-            else {
-                validityDto.setState("vigente");
-            }
-            validities.add(validityDto);
-        }
-
-        return validities;
+    public boolean ping(){
+        return true;
     }
 
-    public List<ValidityDto> getValidityOfLoans(LocalDate date1, LocalDate date2) {
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/" + date1 + "/" + date2, List.class);
-        List<Devolution> devolutions = restTemplate.getForObject(devolutionUrl + "/", List.class);
+    public TransactionDTO setAsEgress(Egress egress) {
+        TransactionDTO transaction = new TransactionDTO();
 
-        List<Loan> unpaidLoans = new ArrayList<>();
+        transaction.setEgress(true);
 
-        assert loans != null;
-        for (Loan loan : loans) {
+        transaction.setId(egress.getId());
 
-            boolean isReturned = false;
+        transaction.setDate(egress.getDate());
 
-            for (Devolution devolution : devolutions) {
-                if (loan.getId() == devolution.getLoanId()){
-                    isReturned = true;
-                    break;
-                }
-            }
+        transaction.setDocType(egress.getDocType());
 
-            if (!isReturned){
-                unpaidLoans.add(loan);
-            }
-        }
+        transaction.setNumDoc(egress.getNumDoc());
 
-        List<ValidityDto> validities = new ArrayList<>();
+        transaction.setReason(egress.getReason());
 
-        for (Loan loan : unpaidLoans) {
-            ValidityDto validityDto = new ValidityDto();
-            validityDto.setLoan(loan);
-            if (loan.getAgreedDate().isBefore(LocalDate.now())){
-                validityDto.setState("atrasado");
-            }
-            else {
-                validityDto.setState("vigente");
-            }
-            validities.add(validityDto);
-        }
+        transaction.setAmount(egress.getAmount());
 
-        return validities;
+        return transaction;
     }
 
-    public List<ValidityDto> getValidityOfLoansAfter(LocalDate date) {
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/After/" + date, List.class);
-        List<Devolution> devolutions = restTemplate.getForObject(devolutionUrl + "/", List.class);
-
-        List<Loan> unpaidLoans = new ArrayList<>();
-
-        assert loans != null;
-        for (Loan loan : loans) {
-
-            boolean isReturned = false;
-
-            for (Devolution devolution : devolutions) {
-                if (loan.getId() == devolution.getLoanId()){
-                    isReturned = true;
-                    break;
-                }
-            }
-
-            if (!isReturned){
-                unpaidLoans.add(loan);
-            }
+    public List<TransactionDTO> setListEgress(List<Egress> listEgress) {
+        List<TransactionDTO> listEgressDTO = new ArrayList<>();
+        for (Egress egress : listEgress) {
+            listEgressDTO.add(setAsEgress(egress));
         }
-
-        List<ValidityDto> validities = new ArrayList<>();
-
-        for (Loan loan : unpaidLoans) {
-            ValidityDto validityDto = new ValidityDto();
-            validityDto.setLoan(loan);
-            if (loan.getAgreedDate().isBefore(LocalDate.now())){
-                validityDto.setState("atrasado");
-            }
-            else {
-                validityDto.setState("vigente");
-            }
-            validities.add(validityDto);
-        }
-
-        return validities;
+        return listEgressDTO;
     }
 
-    public List<ValidityDto> getValidityOfLoansBefore(LocalDate date) {
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/Before/" + date, List.class);
-        List<Devolution> devolutions = restTemplate.getForObject(devolutionUrl + "/", List.class);
+    public TransactionDTO setAsIngress(Ingress ingress) {
+        TransactionDTO transaction = new TransactionDTO();
 
-        List<Loan> unpaidLoans = new ArrayList<>();
+        transaction.setEgress(false);
 
-        assert loans != null;
-        for (Loan loan : loans) {
+        transaction.setId(ingress.getId());
 
-            boolean isReturned = false;
+        transaction.setDate(ingress.getDate());
 
-            for (Devolution devolution : devolutions) {
-                if (loan.getId() == devolution.getLoanId()){
-                    isReturned = true;
-                    break;
-                }
-            }
+        transaction.setDocType(null);
 
-            if (!isReturned){
-                unpaidLoans.add(loan);
-            }
-        }
+        transaction.setNumDoc(ingress.getNumDoc());
 
-        List<ValidityDto> validities = new ArrayList<>();
+        transaction.setReason(null);
 
-        for (Loan loan : unpaidLoans) {
-            ValidityDto validityDto = new ValidityDto();
-            validityDto.setLoan(loan);
-            if (loan.getAgreedDate().isBefore(LocalDate.now())){
-                validityDto.setState("atrasado");
-            }
-            else {
-                validityDto.setState("vigente");
-            }
-            validities.add(validityDto);
-        }
+        transaction.setAmount(ingress.getAmount());
 
-        return validities;
+        return transaction;
     }
 
-    public List<Client> getClientsWithDelays(){
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/", List.class);
-        List<Client> clients = restTemplate.getForObject(clientUrl + "/", List.class);
-        List<Devolution> devolutions = restTemplate.getForObject(devolutionUrl + "/", List.class);
+    public List<TransactionDTO> setListIngress(List<Ingress> listIngress) {
+        List<TransactionDTO> listIngressDTO = new ArrayList<>();
+        for (Ingress ingress : listIngress) {
+            listIngressDTO.add(setAsIngress(ingress));
+        }
+        return listIngressDTO;
+    }
 
-        List<Loan> loansWithDelays = new ArrayList<>();
-        List<Client> clientsWithDelays = new ArrayList<>();
+    public List<TransactionDTO> filterAfter(List<TransactionDTO> inputList, LocalDate from){
 
-        for (Loan loan : loans) {
+        if(inputList.get(0).getDate().isAfter(from) || inputList.get(0).getDate().isEqual(from)){
+            return inputList;
+        }
 
-            boolean isReturned = false;
-
-            for (Devolution devolution : devolutions) {
-                if (loan.getId() == devolution.getLoanId()){
-                    isReturned = true;
-                    break;
-                }
-            }
-
-            if (!isReturned){
-                loansWithDelays.add(loan);
+        int cuttingFrom = -1;
+        for (int i = 0; i < inputList.size(); i++) {
+            if (inputList.get(i).getDate().isEqual(from) || inputList.get(i).getDate().isAfter(from)) {
+                cuttingFrom = i;
+                break;
             }
         }
 
-        for (Client client : clients) {
-            for (Loan loan : loansWithDelays) {
-                if (client.getId() == loan.getClientId()){
-                    clientsWithDelays.add(client);
+        if(cuttingFrom == -1){
+            return new ArrayList<TransactionDTO>();
+        }
+
+        return new ArrayList<>(inputList.subList(cuttingFrom, inputList.size()));
+    }
+
+    public List<TransactionDTO> filterBefore(List<TransactionDTO> inputList, LocalDate to){
+        if(inputList.get(inputList.size()-1).getDate().isBefore(to) || inputList.get(inputList.size()-1).getDate().isEqual(to)){
+            return inputList;
+        }
+
+        int cuttingTo = -1;
+        for (int i = 1; i < inputList.size() + 1; i++) {
+            if (inputList.get(inputList.size()-i).getDate().isEqual(to) || inputList.get(inputList.size()-i).getDate().isBefore(to)) {
+                cuttingTo = inputList.size()-i;
+                break;
+            }
+        }
+
+        if(cuttingTo == -1){
+            return new ArrayList<TransactionDTO>();
+        }
+
+        return new ArrayList<>(inputList.subList(0, cuttingTo));
+    }
+
+
+    public List<TransactionDTO> filter(List<TransactionDTO> inputList, LocalDate from, LocalDate to){
+
+        if(from == null && to == null){
+            return inputList;
+        }
+
+        if(from != null){
+            inputList = filterAfter(inputList, from);
+        }
+
+        if(to != null){
+            inputList = filterBefore(inputList, to);
+        }
+
+        return inputList;
+    }
+
+    public List<TransactionDTO> getSortedList(){
+        List<Ingress> ingresses = restTemplate.getForObject(ingressUrl + "all/sorted", List.class);
+        List<Egress> egresses = restTemplate.getForObject(egressUrl + "all/sorted", List.class);
+
+        List<TransactionDTO> sortedList = new ArrayList<>();
+
+        List<TransactionDTO> ingressesToTransaction = new ArrayList<>();
+        List<TransactionDTO> egressesToTransaction = new ArrayList<>();
+
+        if(ingresses != null){
+            ingressesToTransaction = setListIngress(ingresses);
+        }
+
+        if(egresses != null){
+            egressesToTransaction = setListEgress(egresses);
+        }
+
+        int frontOfIngress = 0;
+        int frontOfEgress = 0;
+
+        if(ingressesToTransaction != null && egressesToTransaction != null){
+
+            while (frontOfIngress < ingressesToTransaction.size() && frontOfEgress < egressesToTransaction.size()) {
+
+                LocalDate dateOfIngress = ingressesToTransaction.get(0).getDate();
+                LocalDate dateOfEgress = egressesToTransaction.get(0).getDate();
+
+                if (frontOfIngress < ingressesToTransaction.size()){
+                    dateOfIngress = ingressesToTransaction.get(frontOfIngress).getDate();
+                }
+
+                if (frontOfEgress < egressesToTransaction.size()){
+                    dateOfEgress = egressesToTransaction.get(frontOfEgress).getDate();
+                }
+
+                if (dateOfIngress.isBefore(dateOfEgress) || dateOfIngress.isEqual(dateOfEgress)) {
+                    sortedList.add(ingressesToTransaction.get(frontOfIngress));
+                    frontOfIngress++;
+                }
+                else {
+                    sortedList.add(egressesToTransaction.get(frontOfEgress));
+                    frontOfEgress++;
                 }
             }
         }
 
-        return clientsWithDelays;
-    }
-
-    public void QSSwap(List<PopularityDto> ranking, int i, int j){
-        PopularityDto temp = ranking.get(i);
-        ranking.set(i, ranking.get(j));
-        ranking.set(j, temp);
-    }
-
-    public int QSPartition(List<PopularityDto> ranking, int low, int high){
-
-        long pivot = ranking.get(high).getLoanQuantity();
-
-        int i = low - 1;
-
-        for (int j = low; j <= high; j++){
-
-
-            if (ranking.get(j).getLoanQuantity() < pivot){
-                i++;
-                QSSwap(ranking, i, j);
-            }
+        if(ingressesToTransaction != null){
+            sortedList = ingressesToTransaction;
         }
 
-        QSSwap(ranking, i+1, high);
-        return i+1;
-    }
-
-    public void QuickSort(List<PopularityDto> ranking, int low, int high){
-        if (low < high){
-
-            int pivot = QSPartition(ranking, low, high);
-            QuickSort(ranking, low, pivot - 1);
-            QuickSort(ranking, pivot + 1, high);
-        }
-    }
-
-    public List<PopularityDto> toolRanking(){
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/", List.class);
-        List<Tool> tools = restTemplate.getForObject(toolUrl + "/", List.class);
-
-        List<PopularityDto> Ranking = new ArrayList<>();
-
-        for (Tool tool : tools) {
-
-            PopularityDto popularityDto = new PopularityDto();
-            popularityDto.setTool(tool);
-            popularityDto.setLoanQuantity(0);
-
-            for (Loan loan : loans) {
-
-                if (loan.getToolId() == tool.getId()) {
-
-                    popularityDto.setLoanQuantity(popularityDto.getLoanQuantity() + 1);
-                }
-
-            }
-
-            Ranking.add(popularityDto);
+        if(egressesToTransaction != null){
+            sortedList = egressesToTransaction;
         }
 
-        QuickSort(Ranking, 0, Ranking.size() - 1);
-
-        Collections.reverse(Ranking);
-
-        return Ranking;
+        return sortedList;
     }
 
-    public List<PopularityDto> toolRanking(LocalDate date1, LocalDate date2){
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/" + date1 + "/" + date2, List.class);
-        List<Tool> tools = restTemplate.getForObject(toolUrl + "/", List.class);
 
-        List<PopularityDto> Ranking = new ArrayList<>();
+    public List<TransactionDTO> sortBetweenDates(LocalDate from, LocalDate to){
 
-        for (Tool tool : tools) {
+        List<TransactionDTO> sortedList = getSortedList();
 
-            PopularityDto popularityDto = new PopularityDto();
-            popularityDto.setTool(tool);
-            popularityDto.setLoanQuantity(0);
+        sortedList = filter(sortedList, from, to);
 
-            for (Loan loan : loans) {
-
-                if (loan.getToolId() == tool.getId()) {
-
-                    popularityDto.setLoanQuantity(popularityDto.getLoanQuantity() + 1);
-                }
-
-            }
-
-            Ranking.add(popularityDto);
-        }
-
-        QuickSort(Ranking, 0, Ranking.size() - 1);
-
-        Collections.reverse(Ranking);
-
-        return Ranking;
-    }
-
-    public List<PopularityDto> toolRankingBefore(LocalDate date){
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/Before/" + date, List.class);
-        List<Tool> tools = restTemplate.getForObject(toolUrl + "/", List.class);
-
-        List<PopularityDto> Ranking = new ArrayList<>();
-
-        for (Tool tool : tools) {
-
-            PopularityDto popularityDto = new PopularityDto();
-            popularityDto.setTool(tool);
-            popularityDto.setLoanQuantity(0);
-
-            for (Loan loan : loans) {
-
-                if (loan.getToolId() == tool.getId()) {
-
-                    popularityDto.setLoanQuantity(popularityDto.getLoanQuantity() + 1);
-                }
-
-            }
-
-            Ranking.add(popularityDto);
-        }
-
-        QuickSort(Ranking, 0, Ranking.size() - 1);
-
-        Collections.reverse(Ranking);
-
-        return Ranking;
-    }
-
-    public List<PopularityDto> toolRankingAfter(LocalDate date){
-        List<Loan> loans = restTemplate.getForObject(loanUrl + "/After/" + date, List.class);
-        List<Tool> tools = restTemplate.getForObject(toolUrl + "/", List.class);
-
-        List<PopularityDto> Ranking = new ArrayList<>();
-
-        for (Tool tool : tools) {
-
-            PopularityDto popularityDto = new PopularityDto();
-            popularityDto.setTool(tool);
-            popularityDto.setLoanQuantity(0);
-
-            for (Loan loan : loans) {
-
-                if (loan.getToolId() == tool.getId()) {
-
-                    popularityDto.setLoanQuantity(popularityDto.getLoanQuantity() + 1);
-                }
-
-            }
-
-            Ranking.add(popularityDto);
-        }
-
-        QuickSort(Ranking, 0, Ranking.size() - 1);
-
-        Collections.reverse(Ranking);
-
-        return Ranking;
+        return sortedList;
     }
 }
