@@ -55,8 +55,6 @@ kubectl delete -f postgres-config-map.yaml
 kubectl delete -f postgres-secrets.yaml 
 kubectl delete -f postgres-dp-sv-pvc.yaml
 
-<!-- Deployment delete -->
-
 kubectl delete -f config-deployment.yaml
 kubectl delete -f gateway-deployment.yaml
 kubectl delete -f ms-egress-deploy.yaml
@@ -99,12 +97,12 @@ kubectl apply -f ms-report-deploy.yaml
 
 minikube service gateway --url
 
-cd ..
 
 ####################
 ##### Frontend #####
 ####################
 
+cd ..
 cd frontend
 docker build -t locomotive1584/frontend:latest .
 docker push locomotive1584/frontend:latest

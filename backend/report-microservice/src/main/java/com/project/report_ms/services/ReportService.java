@@ -149,7 +149,7 @@ public class ReportService {
         );
         List<Ingress> ingresses = ingressResponse.getBody();
 
-        System.out.println(ingresses);
+        System.out.println("ingresses" + ingresses);
 
         ResponseEntity<List<Egress>> egressResponse = restTemplate.exchange(
                 egressUrl + "all/sorted",
@@ -159,7 +159,7 @@ public class ReportService {
         );
         List<Egress> egresses = egressResponse.getBody();
 
-        System.out.println(egresses);
+        System.out.println("egresses: " + egresses);
 
         List<TransactionDTO> sortedList = new ArrayList<>();
 
@@ -184,8 +184,21 @@ public class ReportService {
 
             while (frontOfIngress < ingressesToTransaction.size() || frontOfEgress < egressesToTransaction.size()) {
 
+                System.out.println("============================\n");
+
+
+
                 LocalDate dateOfIngress = ingressesToTransaction.get(0).getDate();
                 LocalDate dateOfEgress = egressesToTransaction.get(0).getDate();
+
+                System.out.println("frontOfIngress: " + frontOfIngress);
+                System.out.println("ingressesToTransaction.size(): " + ingressesToTransaction.size());
+                System.out.println("\n");
+                System.out.println("frontOfEgress: " + frontOfEgress);
+                System.out.println("egressesToTransaction.size(): " + egressesToTransaction.size());
+
+
+
 
                 if (frontOfIngress < ingressesToTransaction.size()){
                     dateOfIngress = ingressesToTransaction.get(frontOfIngress).getDate();
@@ -201,10 +214,16 @@ public class ReportService {
                     sortedList.add(ingressesToTransaction.get(frontOfIngress));
                     frontOfIngress++;
                 }
-                else {
+                else if (frontOfEgress < egressesToTransaction.size()) {
                     sortedList.add(egressesToTransaction.get(frontOfEgress));
                     frontOfEgress++;
                 }
+                else {
+                    sortedList.add(ingressesToTransaction.get(frontOfIngress));
+                    frontOfIngress++;
+                }
+
+                System.out.println("============================\n");
             }
         }
 

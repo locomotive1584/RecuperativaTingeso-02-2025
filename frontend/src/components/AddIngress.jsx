@@ -8,6 +8,12 @@ import SaveIcon from "@mui/icons-material/Save";
 import ingressService from "../services/ingress.service";
 import { Alert, Snackbar } from "@mui/material";
 
+const formatDateToBackend = (dateString) => {
+  if (!dateString) return '';
+  const [year, month, day] = dateString.split('-');
+  return `${day}-${month}-${year}`;
+};
+
 export const AddIngress = () => {
     const navigate = useNavigate();
     const [date, setDate] = useState("");
@@ -46,7 +52,7 @@ export const AddIngress = () => {
         console.log("3. Validación pasó");
 
         const ingress = {
-            date,
+            date: formatDateToBackend(date),
             numDoc,
             amount: parseInt(amount, 10)
         };

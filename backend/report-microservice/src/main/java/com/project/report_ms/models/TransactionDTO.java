@@ -1,6 +1,7 @@
 package com.project.report_ms.models;
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class TransactionDTO {
 
@@ -8,6 +9,7 @@ public class TransactionDTO {
 
     private Long id;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date;
 
     private String docType;

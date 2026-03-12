@@ -8,6 +8,13 @@ import SaveIcon from "@mui/icons-material/Save";
 import egressService from "../services/egress.service";
 import { Alert, Snackbar, Autocomplete } from "@mui/material";
 
+export const formatDateToBackend = (dateString) => {
+  if (!dateString) return '';
+  // Asumiendo que dateString viene en formato YYYY-MM-DD
+  const [year, month, day] = dateString.split('-');
+  return `${day}-${month}-${year}`;
+};
+
 export const AddEgress = () => {
     const navigate = useNavigate();
     const [date, setDate] = useState("");
@@ -61,7 +68,7 @@ export const AddEgress = () => {
         console.log("3. Validación pasó");
 
         const egress = {
-            date,
+            date: formatDateToBackend(date),
             docType,
             numDoc,
             reason,
