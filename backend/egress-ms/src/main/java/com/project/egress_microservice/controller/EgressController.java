@@ -10,28 +10,28 @@ import com.project.egress_microservice.entities.EgressEntity;
 import java.util.List;
 
 @RestController
-@RequestMapping("/egress/")
+@RequestMapping("/egress")
 public class EgressController {
     @Autowired
     EgressService egressService;
 
-    @GetMapping("ping")
+    @GetMapping("/ping")
     public ResponseEntity<Boolean> ping() {
         return ResponseEntity.ok(egressService.ping());
     }
 
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<List<EgressEntity>> getAll(){
         return ResponseEntity.ok(egressService.getAllEgress());
     }
 
-    @GetMapping("all/sorted")
+    @GetMapping("/all/sorted")
     public ResponseEntity<List<EgressEntity>> getAllOrderByDate(){
         return ResponseEntity.ok(egressService.getAllEgressOrderByDate());
     }
 
-    @PostMapping("")
+    @PostMapping("/")
     public ResponseEntity<EgressEntity> addEgress(@RequestBody EgressEntity egress) throws Exception{
         return ResponseEntity.ok(egressService.saveEgress(egress));
     }

@@ -1,50 +1,27 @@
-// src/services/report.service.js
-import httpReport from '../http-common';
+import httpClient from "../http-common"
 
-export const getValidity = () => {
-    return httpReport.get('/reports/getValidity');
+const BASE_URL = '/reports'
+
+export const getAllTransactions = () => {
+  return httpClient.get(`${BASE_URL}/After/Before/`)
 }
 
-export const getValidityBetween = (date1, date2) => {
-    return httpReport.get(`/reports/getValidity/Between/${date1}/${date2}`);
+// Obtener transacciones filtradas por fecha (from y to pueden ser null)
+export const getTransactionsFiltered = (from, to) => {
+  let url = `${BASE_URL}/After`
+  url += from ? `/${from}` : ''
+  url += '/Before'
+  url += to ? `/${to}` : ''
+  url += '/'
+  return httpClient.get(url)
 }
 
-export const getValidityBefore = (date) => {
-    return httpReport.get(`/reports/getValidity/Before/${date}`);
+export const ping = () => {
+  return httpClient.get(`${BASE_URL}/ping`)
 }
 
-export const getValidityAfter = (date) => {
-    return httpReport.get(`/reports/getValidity/After/${date}`);
-}
-
-export const getClientsWithDelays = () => {
-    return httpReport.get('/reports/getClientsWithDelays');
-}
-
-export const getPopularTools = () => {
-    return httpReport.get('/reports/getPopularTools');
-}
-
-export const getPopularToolsBetween = (date1, date2) => {
-    return httpReport.get(`/reports/getPopularTools/Between/${date1}/${date2}`);
-}
-
-export const getPopularToolsBefore = (date) => {
-    return httpReport.get(`/reports/getPopularTools/Before/${date}`);
-}
-
-export const getPopularToolsAfter = (date) => {
-    return httpReport.get(`/reports/getPopularTools/After/${date}`);
-}
-
-export default { 
-    getValidity, 
-    getValidityBetween, 
-    getValidityBefore, 
-    getValidityAfter,
-    getClientsWithDelays,
-    getPopularTools,
-    getPopularToolsBetween,
-    getPopularToolsBefore,
-    getPopularToolsAfter
+export default {
+  getAllTransactions,
+  getTransactionsFiltered,
+  ping
 }

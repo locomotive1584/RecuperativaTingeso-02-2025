@@ -22,13 +22,6 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "native"
-          volumeMounts:
-            - name: config-volume
-              mountPath: /app/config  # Montar configuración en el contenedor
-      volumes:
-        - name: config-volume
-          configMap:
-            name: configserver-config
 ---
 apiVersion: v1
 kind: Service

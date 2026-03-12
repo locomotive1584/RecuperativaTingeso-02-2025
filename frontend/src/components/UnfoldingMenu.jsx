@@ -41,7 +41,7 @@ export const UnfoldingMenu = ({title, options}) => {
 
             <Button
                 variant="contained"
-                sx={{backgroundColor: "#d79a01"}}>
+                sx={{backgroundColor: "#7c7c7c"}}>
                 {title}
             </Button>
 

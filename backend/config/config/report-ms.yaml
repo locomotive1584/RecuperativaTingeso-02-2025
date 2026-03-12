@@ -1,6 +1,9 @@
 server:
   port: 8003
 spring:
+  cloud:
+    gateway:
+      url: http://${GATEWAY_HOST:gateway}:${GATEWAY_PORT:8081}
   datasource:
     url: jdbc:postgresql://${POSTGRES_DB_HOST}:5432/${POSTGRES_DB_NAME}
     username: postgres

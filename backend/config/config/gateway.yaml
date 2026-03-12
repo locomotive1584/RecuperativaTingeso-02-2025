@@ -8,21 +8,26 @@ eureka:
 spring:
   cloud:
     gateway:
+      cors-configurations:
+        '[/**]':
+          allowedOrigins: "*"
+          allowedMethods: "*"
+          allowedHeaders: "*"
       discovery:
         locator:
           enabled: true
       routes:
         - id: egress-ms
-          uri: http://localhost:8001
+          uri: http://egress-microservice:8001
           predicates:
             - Path=/egress/**
 
         - id: ingress-ms
-          uri: http://localhost:8002
+          uri: http://ingress-microservice:8002
           predicates:
             - Path=/ingress/**
 
-        - id: reports-ms
-          uri: http://localhost:8003
+        - id: ingress-ms
+          uri: http://report-microservice:8003
           predicates:
             - Path=/reports/**

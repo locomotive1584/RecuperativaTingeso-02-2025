@@ -47,7 +47,7 @@ spec:
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
-              value: "123456"
+              value: "123"
             - name: POSTGRES_DB
               value: "postgres"
           volumeMounts:
@@ -70,5 +70,4 @@ spec:
       targetPort: 5432
   selector:
     app: postgres
-    tier: database
-  clusterIP: None
+  clusterIP: ""

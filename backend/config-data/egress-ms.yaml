@@ -2,9 +2,14 @@ server:
   port: 8001
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/egress-db
-    username: ${DB_USER:postgres}
-    password: ${DB_PASS:123}
+    url: jdbc:postgresql://postgres:5432/egress-db
+    username: postgres
+    password: 123
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+eureka:
+  client:
+    enabled: false

@@ -33,6 +33,10 @@
   }
 }
 
+.container {
+  padding-top: 80px;
+}
+
 .card {
   padding: 2em;
 }

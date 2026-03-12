@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: eureka-deployment
+  name: gateway-deployment
   labels:
-    app: eureka-deployment
+    app: gateway-deployment
 spec:
   selector:
     matchLabels:
-      app: eureka-deployment
+      app: gateway-deployment
   replicas: 1
   template:
     metadata:
       labels:
-        app: eureka-deployment
+        app: gateway-deployment
     spec:
       containers:
-        - name: eureka
-          image: locomotive1584/eureka:latest
+        - name: gateway
+          image: locomotive1584/gateway:latest
           ports:
-            - containerPort: 8761
+            - containerPort: 8081
           env:
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config:8888
@@ -26,14 +26,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: eureka
+  name: gateway
   labels:
-    app: eureka
+    app: gateway
 spec:
   selector:
-    app: eureka-deployment
+    app: gateway-deployment
   ports:
     - protocol: TCP
-      port: 8761
-      targetPort: 8761
-  type: ClusterIP
+      port: 8081
+      targetPort: 8081
+      nodePort: 30100
+  type: NodePort

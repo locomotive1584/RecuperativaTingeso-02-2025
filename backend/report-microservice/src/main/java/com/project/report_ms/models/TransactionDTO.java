@@ -18,6 +18,19 @@ public class TransactionDTO {
 
     private long amount;
 
+    @Override
+    public String toString() {
+        return "TransactionDTO{" +
+                "amount=" + amount +
+                ", isEgress=" + isEgress +
+                ", id=" + id +
+                ", date=" + date +
+                ", docType='" + docType + '\'' +
+                ", numDoc='" + numDoc + '\'' +
+                ", reason='" + reason + '\'' +
+                '}';
+    }
+
     public long getAmount() {
         return amount;
     }

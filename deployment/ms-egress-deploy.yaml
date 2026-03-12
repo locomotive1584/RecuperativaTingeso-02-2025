@@ -1,29 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loan-microservice-deployment
+  name: egress-microservice-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: loan-microservice-deployment
+      app: egress-microservice-deployment
   template:
     metadata:
       labels:
-        app: loan-microservice-deployment
+        app: egress-microservice-deployment
     spec:
       containers:
-        - name: loan-microservice-container
-          image: locomotive1584/loan-microservice:latest
+        - name: egress-microservice-container
+          image: locomotive1584/egress-microservice:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 8001
           env:
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config:8888
-            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka:8761/eureka
-            - name: eureka.instance.preferIpAddress
-              value: "true"
             - name: POSTGRES_DB_HOST
               valueFrom:
                 configMapKeyRef:
@@ -33,7 +29,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
-                  key: POSTGRES_DB_LOAN
+                  key: POSTGRES_DB_EGRESS
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -48,11 +44,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: loan-microservice
+  name: egress-microservice
 spec:
   selector:
-    app: loan-microservice-deployment
+    app: egress-microservice-deployment
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8001
+      targetPort: 8001
   type: ClusterIP

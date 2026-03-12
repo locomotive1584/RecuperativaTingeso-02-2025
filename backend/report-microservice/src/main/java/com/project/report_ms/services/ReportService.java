@@ -17,8 +17,12 @@ public class ReportService {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    String ingressUrl = "http://localhost:8081/ingress/";
-    String egressUrl = "http://localhost:8081/egress/";
+    String gatewayHost = System.getenv().getOrDefault("GATEWAY_HOST", "gateway");
+    String gatewayPort = System.getenv().getOrDefault("GATEWAY_PORT", "8081");
+    String baseUrl = "http://" + gatewayHost + ":" + gatewayPort;
+
+    String ingressUrl = baseUrl + "/ingress/";
+    String egressUrl = baseUrl + "/egress/";
 
     public boolean ping(){
         return true;
@@ -57,11 +61,11 @@ public class ReportService {
 
         transaction.setDate(ingress.getDate());
 
-        transaction.setDocType(null);
+        transaction.setDocType("Recibo");
 
         transaction.setNumDoc(ingress.getNumDoc());
 
-        transaction.setReason(null);
+        transaction.setReason("Ingreso a caja");
 
         transaction.setAmount(ingress.getAmount());
 
@@ -138,34 +142,39 @@ public class ReportService {
 
     public List<TransactionDTO> getSortedList(){
         ResponseEntity<List<Ingress>> ingressResponse = restTemplate.exchange(
-                "http://localhost:8081/ingress/all/sorted",
+                ingressUrl + "all/sorted",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Ingress>>() {}
         );
         List<Ingress> ingresses = ingressResponse.getBody();
 
-
+        System.out.println(ingresses);
 
         ResponseEntity<List<Egress>> egressResponse = restTemplate.exchange(
-                "http://localhost:8081/egress/all/sorted",
+                egressUrl + "all/sorted",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Egress>>() {}
         );
         List<Egress> egresses = egressResponse.getBody();
 
+        System.out.println(egresses);
+
         List<TransactionDTO> sortedList = new ArrayList<>();
 
         List<TransactionDTO> ingressesToTransaction = new ArrayList<>();
         List<TransactionDTO> egressesToTransaction = new ArrayList<>();
 
+
         if(ingresses != null){
             ingressesToTransaction = setListIngress(ingresses);
+            System.out.println("ingressesToTransaction presorting: " + ingressesToTransaction.toString());
         }
 
         if(egresses != null){
             egressesToTransaction = setListEgress(egresses);
+            System.out.println("egressesToTransaction presorting: " + egressesToTransaction.toString());
         }
 
         int frontOfIngress = 0;
@@ -173,7 +182,7 @@ public class ReportService {
 
         if(ingressesToTransaction != null && egressesToTransaction != null){
 
-            while (frontOfIngress < ingressesToTransaction.size() && frontOfEgress < egressesToTransaction.size()) {
+            while (frontOfIngress < ingressesToTransaction.size() || frontOfEgress < egressesToTransaction.size()) {
 
                 LocalDate dateOfIngress = ingressesToTransaction.get(0).getDate();
                 LocalDate dateOfEgress = egressesToTransaction.get(0).getDate();
@@ -186,7 +195,9 @@ public class ReportService {
                     dateOfEgress = egressesToTransaction.get(frontOfEgress).getDate();
                 }
 
-                if (dateOfIngress.isBefore(dateOfEgress) || dateOfIngress.isEqual(dateOfEgress)) {
+                if (frontOfIngress < ingressesToTransaction.size() &&
+                        (dateOfIngress.isBefore(dateOfEgress) || dateOfIngress.isEqual(dateOfEgress))) {
+
                     sortedList.add(ingressesToTransaction.get(frontOfIngress));
                     frontOfIngress++;
                 }
@@ -197,6 +208,11 @@ public class ReportService {
             }
         }
 
+        System.out.println("ingressesToTransaction postsorting: " + ingressesToTransaction.toString());
+        System.out.println("egressesToTransaction postsorting: " + egressesToTransaction.toString());
+        System.out.println("ingressesToTransactionIsNull: " + ingressesToTransaction == null);
+        System.out.println("egressesToTransactionIsNull: " + egressesToTransaction == null);
+
         if(ingressesToTransaction != null && egressesToTransaction == null){
             sortedList = ingressesToTransaction;
         }
@@ -204,6 +220,8 @@ public class ReportService {
         if(egressesToTransaction != null && ingressesToTransaction == null){
             sortedList = egressesToTransaction;
         }
+
+        System.out.println("sortedList in getSortedList(): " + sortedList.toString());
 
         return sortedList;
     }
@@ -214,6 +232,8 @@ public class ReportService {
         List<TransactionDTO> sortedList = getSortedList();
 
         sortedList = filter(sortedList, from, to);
+
+        System.out.println("sortedList in sortBetweenDates(): " + sortedList.toString());
 
         return sortedList;
     }

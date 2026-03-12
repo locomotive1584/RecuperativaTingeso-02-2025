@@ -1,29 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bill-microservice-deployment
+  name: ingress-microservice-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bill-microservice-deployment
+      app: ingress-microservice-deployment
   template:
     metadata:
       labels:
-        app: bill-microservice-deployment
+        app: ingress-microservice-deployment
     spec:
       containers:
-        - name: bill-microservice-container
-          image: locomotive1584/bill-microservice:latest
+        - name: ingress-microservice-container
+          image: locomotive1584/ingress-microservice:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 8002
           env:
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config:8888
-            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka:8761/eureka
-            - name: eureka.instance.preferIpAddress
-              value: "true"
             - name: POSTGRES_DB_HOST
               valueFrom:
                 configMapKeyRef:
@@ -33,7 +29,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: postgres-config-map
-                  key: POSTGRES_DB_BILL
+                  key: POSTGRES_DB_INGRESS
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -48,11 +44,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bill-microservice
+  name: ingress-microservice
 spec:
   selector:
-    app: bill-microservice-deployment
+    app: ingress-microservice-deployment
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8002
+      targetPort: 8002
   type: ClusterIP
